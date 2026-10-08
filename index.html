@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vitrio – O que cozinhar com o que você tem</title>
+  <meta name="description" content="Selecione os ingredientes que você tem em casa e descubra receitas compatíveis.">
+  <meta name="theme-color" content="#2d5a3d">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Pular para o conteúdo</a>
+
+  <!-- Cabeçalho + navegação (vira barra inferior no celular) -->
+  <header class="topbar">
+    <a class="brand" href="#" data-go="inicio" aria-label="Vitrio – início">
+      <span class="brand-icon" aria-hidden="true"></span>
+      <span class="brand-name">Vitrio</span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <button data-go="inicio"><span class="ico" aria-hidden="true">🏠</span><span>Início</span></button>
+      <button data-go="ingredientes"><span class="ico" aria-hidden="true">🥕</span><span>Ingredientes</span></button>
+      <button data-go="receitas"><span class="ico" aria-hidden="true">📖</span><span>Receitas</span></button>
+      <button data-go="criar"><span class="ico" aria-hidden="true">➕</span><span>Criar</span></button>
+      <button data-go="favoritos"><span class="ico" aria-hidden="true">♡</span><span>Favoritos</span></button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- INÍCIO -->
+    <section class="view" id="view-inicio">
+      <div class="hero">
+        <h1>Descubra o que cozinhar com o que você já tem.</h1>
+        <p>Selecione seus ingredientes e encontre receitas que combinam com eles.</p>
+        <button class="btn btn-primary btn-lg" data-go="ingredientes">Encontrar receitas</button>
+      </div>
+      <div class="steps">
+        <div><b>1. Escolha</b><span>Marque o que está na geladeira e no armário.</span></div>
+        <div><b>2. Compare</b><span>Veja a compatibilidade de cada receita em porcentagem.</span></div>
+        <div><b>3. Cozinhe</b><span>Siga o passo a passo e salve as favoritas.</span></div>
+      </div>
+    </section>
+
+    <!-- INGREDIENTES -->
+    <section class="view" id="view-ingredientes" hidden>
+      <div class="picked card">
+        <h2>Seus ingredientes</h2>
+        <div id="picked-chips" class="chips"></div>
+        <div class="picked-foot"><button class="btn btn-ghost btn-sm" id="clear-btn">Limpar tudo</button></div>
+      </div>
+
+      <h2 class="section-title">O que você tem em casa?</h2>
+      <p class="muted">Toque para marcar. “O básico” seleciona sal, óleo, açúcar e alho.</p>
+      <div class="tools">
+        <input type="search" id="search" placeholder="🔍 Procurar ingrediente..." aria-label="Procurar ingrediente" autocomplete="off">
+        <button class="btn btn-outline" id="basics-btn">Marcar o básico</button>
+        <button class="btn btn-outline" id="add-toggle" aria-expanded="false" aria-controls="add-row">+ Adicionar ingrediente</button>
+      </div>
+      <div class="add-row" id="add-row" hidden>
+        <input type="text" id="add-input" placeholder="Nome do ingrediente" maxlength="30" aria-label="Novo ingrediente">
+        <button class="btn btn-primary" id="add-btn">Adicionar</button>
+      </div>
+      <p class="sr-only" id="live" aria-live="polite"></p>
+      <div id="categories"></div>
+
+      <div class="cta-bar" id="cta-bar" hidden>
+        <span id="picked-count"></span>
+        <button class="btn" id="find-btn">Encontrar receitas</button>
+      </div>
+    </section>
+
+    <!-- RECEITAS -->
+    <section class="view" id="view-receitas" hidden>
+      <div class="head-row"><h2 class="section-title first">Receitas para você</h2><button class="btn btn-outline btn-sm" data-go="criar">+ Criar minha receita</button></div>
+      <p class="muted" id="results-summary" aria-live="polite"></p>
+      <div class="rtools">
+        <input type="search" id="f-q" placeholder="🔍 Buscar receita pelo nome..." aria-label="Buscar receita pelo nome" autocomplete="off">
+        <details class="filters-wrap">
+          <summary>Filtros <span id="f-count"></span></summary>
+          <div class="filters card" id="filters">
+            <label>Tempo
+              <select id="f-tempo"><option value="">Qualquer</option><option value="15">Até 15 min</option><option value="30">Até 30 min</option><option value="60">Até 1 hora</option></select>
+            </label>
+            <label>Dificuldade
+              <select id="f-dif"><option value="">Todas</option><option>Fácil</option><option>Médio</option><option>Difícil</option></select>
+            </label>
+            <label>Compatibilidade
+              <select id="f-comp"><option value="">Todas</option><option value="100">100%</option><option value="75">75% ou mais</option><option value="50">50% ou mais</option></select>
+            </label>
+            <label>Categoria
+              <select id="f-cat"><option value="">Todas</option><option>Café da manhã</option><option>Almoço</option><option>Jantar</option><option>Lanche</option><option>Sobremesa</option></select>
+            </label>
+            <label class="check"><input type="checkbox" id="f-all"> Mostrar todas as receitas</label>
+            <button class="btn btn-ghost btn-sm" id="f-clear" type="button">Limpar filtros</button>
+          </div>
+        </details>
+      </div>
+      <div id="results"></div>
+    </section>
+
+    <!-- FAVORITOS -->
+    <section class="view" id="view-favoritos" hidden>
+      <h2 class="section-title first">Receitas favoritas</h2>
+      <div id="favs"></div>
+    </section>
+    <!-- CRIAR / EDITAR RECEITA -->
+    <section class="view" id="view-criar" hidden>
+      <h2 class="section-title first" id="c-title" tabindex="-1">Criar minha receita</h2>
+      <p class="muted">Sua receita fica salva neste aparelho e aparece junto das outras, com a compatibilidade calculada.</p>
+      <div id="c-status" class="status" role="status"></div>
+      <p class="sr-only" id="c-live" aria-live="polite"></p>
+
+      <form id="recipe-form" class="card form" novalidate>
+        <div id="c-errors" class="errors" role="alert" tabindex="-1" hidden></div>
+
+        <div class="field">
+          <label for="c-nome">Nome da receita <span class="req">(obrigatório)</span></label>
+          <input id="c-nome" type="text" maxlength="60" autocomplete="off" aria-describedby="e-nome">
+          <span class="err" id="e-nome"></span>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="c-cat">Categoria</label>
+            <select id="c-cat"><option>Café da manhã</option><option selected>Almoço</option><option>Jantar</option><option>Lanche</option><option>Sobremesa</option></select>
+          </div>
+          <div class="field">
+            <label for="c-tempo">Tempo de preparo (minutos)</label>
+            <input id="c-tempo" type="number" inputmode="numeric" min="1" max="600" value="30" aria-describedby="e-tempo">
+            <span class="err" id="e-tempo"></span>
+          </div>
+          <div class="field">
+            <label for="c-porc">Porções</label>
+            <input id="c-porc" type="number" inputmode="numeric" min="1" max="50" value="2" aria-describedby="e-porc">
+            <span class="err" id="e-porc"></span>
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>Dificuldade</legend>
+          <div class="seg">
+            <label><input type="radio" name="c-dif" value="Fácil" checked><span>Fácil</span></label>
+            <label><input type="radio" name="c-dif" value="Médio"><span>Médio</span></label>
+            <label><input type="radio" name="c-dif" value="Difícil"><span>Difícil</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Ícone do prato</legend>
+          <div class="emos" id="c-emojis"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Ingredientes <span class="req">(pelo menos um)</span></legend>
+          <p class="hint" id="h-ing">Digite o nome e, se quiser, a quantidade. Ingredientes novos também ficam disponíveis na tela de seleção.</p>
+          <div class="ing-add">
+            <div class="field">
+              <label for="c-ing">Ingrediente</label>
+              <input id="c-ing" type="text" list="ing-sugestoes" autocomplete="off" maxlength="40" aria-describedby="h-ing e-ings">
+            </div>
+            <div class="field">
+              <label for="c-qtd">Quantidade (opcional)</label>
+              <input id="c-qtd" type="text" maxlength="30" placeholder="ex.: 2 unidades">
+            </div>
+            <button type="button" class="btn btn-outline" id="c-ing-btn">Adicionar ingrediente</button>
+          </div>
+          <datalist id="ing-sugestoes"></datalist>
+          <ul id="c-ings" class="c-list" aria-label="Ingredientes da receita"></ul>
+          <span class="err" id="e-ings"></span>
+        </fieldset>
+
+        <fieldset>
+          <legend>Modo de preparo <span class="req">(pelo menos um passo)</span></legend>
+          <ol id="c-steps" class="c-list steps-list"></ol>
+          <button type="button" class="btn btn-outline" id="c-step-btn">+ Adicionar passo</button>
+          <span class="err" id="e-steps"></span>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-lg" id="c-save">Salvar receita</button>
+          <button type="button" class="btn btn-ghost" id="c-cancel">Limpar</button>
+        </div>
+      </form>
+
+      <h2 class="section-title">Suas receitas</h2>
+      <div id="c-mine"></div>
+    </section>
+
+  </main>
+
+  <!-- Modal da receita -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="m-title">
+      <button class="modal-close" id="modal-close" aria-label="Fechar receita">×</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // PWA: permite instalar o app e usar offline
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+  </script>
+</body>
+</html>
