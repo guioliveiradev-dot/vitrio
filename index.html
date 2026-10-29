@@ -36,6 +36,7 @@
         <h1>Descubra o que cozinhar com o que você já tem.</h1>
         <p>Selecione seus ingredientes e encontre receitas que combinam com eles.</p>
         <button class="btn btn-primary btn-lg" data-go="ingredientes">Encontrar receitas</button>
+        <p class="salvos" id="salvos" hidden></p>
       </div>
       <div class="steps">
         <div><b>1. Escolha</b><span>Marque o que está na geladeira e no armário.</span></div>
@@ -51,6 +52,11 @@
         <div id="picked-chips" class="chips"></div>
         <div class="picked-foot"><button class="btn btn-ghost btn-sm" id="clear-btn">Limpar tudo</button></div>
       </div>
+
+      <details class="card validade" id="validade-wrap" hidden>
+        <summary>⏳ O que vence logo? <small>(opcional — o Vitrio prioriza receitas que salvam esses itens)</small></summary>
+        <div id="validade-list" class="vgrid"></div>
+      </details>
 
       <h2 class="section-title">O que você tem em casa?</h2>
       <p class="muted">Toque para marcar. “O básico” seleciona sal, óleo, açúcar e alho.</p>
@@ -76,6 +82,7 @@
     <section class="view" id="view-receitas" hidden>
       <div class="head-row"><h2 class="section-title first">Receitas para você</h2><button class="btn btn-outline btn-sm" data-go="criar">+ Criar minha receita</button></div>
       <p class="muted" id="results-summary" aria-live="polite"></p>
+      <div id="rescue" class="rescue" hidden></div>
       <div class="rtools">
         <input type="search" id="f-q" placeholder="🔍 Buscar receita pelo nome..." aria-label="Buscar receita pelo nome" autocomplete="off">
         <details class="filters-wrap">
@@ -93,6 +100,7 @@
             <label>Categoria
               <select id="f-cat"><option value="">Todas</option><option>Café da manhã</option><option>Almoço</option><option>Jantar</option><option>Lanche</option><option>Sobremesa</option></select>
             </label>
+            <label class="check"><input type="checkbox" id="f-trocas"> 🔁 Aceitar substituições (ex.: óleo no lugar da manteiga)</label>
             <label class="check"><input type="checkbox" id="f-all"> Mostrar todas as receitas</label>
             <button class="btn btn-ghost btn-sm" id="f-clear" type="button">Limpar filtros</button>
           </div>
@@ -198,6 +206,9 @@
       <div id="modal-body"></div>
     </div>
   </div>
+
+  <!-- Modo cozinhar -->
+  <div class="cook" id="cook" role="dialog" aria-modal="true" aria-labelledby="cook-title" hidden><div class="cook-box" id="cook-box"></div></div>
 
   <script src="script.js"></script>
   <script>

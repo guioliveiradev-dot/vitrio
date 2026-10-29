@@ -1,7 +1,7 @@
 /* ===== Vitrio – service worker =====
    Guarda os arquivos do app para funcionar offline.
    Sempre que mudar algum arquivo, aumente o número da versão abaixo. */
-const VERSION = 'vitrio-v4';
+const VERSION = 'vitrio-v5';
 const ARQUIVOS = [
   './',
   'index.html',
